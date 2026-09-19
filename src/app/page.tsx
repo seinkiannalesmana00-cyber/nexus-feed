@@ -216,29 +216,55 @@ function HomeApp({ userId, onLogout }: { userId: string; onLogout: () => void })
         {/* Main Layout Container - flex-col with h-full prevents page-level scrolling so we can have true split view */}
         <div className="flex-1 flex flex-col h-full overflow-hidden relative">
           
+          {/* Page Header & Breadcrumbs */}
+          <div className="flex items-center text-sm text-slate-500 mt-4 md:mt-6 mb-6 px-4 md:px-6 lg:px-8">
+            <span>Workspace</span>
+            <ChevronRight className="w-4 h-4 mx-2" />
+            <span className="font-medium text-slate-900">
+              {activeTab === 'feeds' && 'Semua Feed'}
+              {activeTab === 'focus' && 'Fokus Utama'}
+              {activeTab === 'favorites' && 'Favorit'}
+              {activeTab === 'idea_bank' && 'Idea Bank'}
+              {activeTab === 'folder_gaming' && 'Gaming'}
+              {activeTab === 'folder_internet_culture' && 'Internet Culture'}
+              {activeTab === 'folder_intersection' && 'Tech & AI'}
+            </span>
+          </div>
+
           {/* Summary Cards */}
-          <div className="grid grid-cols-3 gap-2 md:gap-4 mb-6 px-4 md:px-6 lg:px-8 mt-4 md:mt-6">
-            <div className="bg-white border border-slate-200 rounded-xl p-3 md:p-4 flex flex-col items-center justify-center shadow-sm">
-              <div className="p-1.5 md:p-2 bg-indigo-50 rounded-md text-indigo-600 mb-2">
-                <Rss className="w-4 h-4 md:w-5 md:h-5" />
+          <div className="grid grid-cols-3 gap-2 md:gap-4 mb-6 px-4 md:px-6 lg:px-8">
+            <div className="bg-white border border-slate-200 rounded-xl p-2 md:p-4 flex flex-col items-center md:items-start justify-center shadow-sm text-center md:text-left">
+              <div className="flex flex-col md:flex-row items-center gap-1 md:gap-2.5 text-slate-500 mb-1 md:mb-2">
+                <div className="p-1 md:p-1.5 bg-indigo-50 rounded-md text-indigo-600 shrink-0">
+                  <Rss className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                </div>
+                <span className="font-medium text-[10px] md:text-xs hidden sm:block">Total Feed</span>
+                <span className="font-medium text-[10px] sm:hidden">Feed</span>
               </div>
-              <p className="text-xl md:text-3xl font-bold text-slate-900 leading-none">{allFeeds.length}</p>
+              <p className="text-lg md:text-2xl font-bold text-slate-900">{allFeeds.length}</p>
             </div>
             
-            <div className="bg-white border border-slate-200 rounded-xl p-3 md:p-4 flex flex-col items-center justify-center shadow-sm">
-              <div className="p-1.5 md:p-2 bg-rose-50 rounded-md text-rose-600 mb-2">
-                <BarChart3 className="w-4 h-4 md:w-5 md:h-5" />
+            <div className="bg-white border border-slate-200 rounded-xl p-2 md:p-4 flex flex-col items-center md:items-start justify-center shadow-sm text-center md:text-left">
+              <div className="flex flex-col md:flex-row items-center gap-1 md:gap-2.5 text-slate-500 mb-1 md:mb-2">
+                <div className="p-1 md:p-1.5 bg-rose-50 rounded-md text-rose-600 shrink-0">
+                  <BarChart3 className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                </div>
+                <span className="font-medium text-[10px] md:text-xs">Artikel</span>
               </div>
-              <p className="text-xl md:text-3xl font-bold text-slate-900 leading-none">
-                {loading ? <Loader2 className="w-4 h-4 md:w-6 md:h-6 animate-spin text-slate-400" /> : articles.length}
+              <p className="text-lg md:text-2xl font-bold text-slate-900">
+                {loading ? <Loader2 className="w-3 h-3 md:w-5 md:h-5 animate-spin text-slate-400 mx-auto md:mx-0" /> : articles.length}
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-3 md:p-4 flex flex-col items-center justify-center shadow-sm">
-              <div className="p-1.5 md:p-2 bg-emerald-50 rounded-md text-emerald-600 mb-2">
-                <Bookmark className="w-4 h-4 md:w-5 md:h-5" />
+            <div className="bg-white border border-slate-200 rounded-xl p-2 md:p-4 flex flex-col items-center md:items-start justify-center shadow-sm text-center md:text-left">
+              <div className="flex flex-col md:flex-row items-center gap-1 md:gap-2.5 text-slate-500 mb-1 md:mb-2">
+                <div className="p-1 md:p-1.5 bg-emerald-50 rounded-md text-emerald-600 shrink-0">
+                  <Bookmark className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                </div>
+                <span className="font-medium text-[10px] md:text-xs hidden sm:block">Tersimpan</span>
+                <span className="font-medium text-[10px] sm:hidden">Simpan</span>
               </div>
-              <p className="text-xl md:text-3xl font-bold text-slate-900 leading-none">{bookmarkedArticles.length}</p>
+              <p className="text-lg md:text-2xl font-bold text-slate-900">{bookmarkedArticles.length}</p>
             </div>
           </div>
 

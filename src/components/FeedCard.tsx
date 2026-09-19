@@ -30,7 +30,6 @@ export default function FeedCard({
   onToggleBookmark,
   onToggleFavorite
 }: FeedCardProps) {
-
   const handleBookmark = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (onToggleBookmark) onToggleBookmark(e);
