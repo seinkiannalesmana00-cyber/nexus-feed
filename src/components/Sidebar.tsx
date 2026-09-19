@@ -13,9 +13,9 @@ import {
   PanelLeftOpen, 
   Settings, 
   Plus, 
-  X 
+  X,
+  LogOut
 } from 'lucide-react';
-import { useStore } from '@/store/useStore';
 
 export type MainTab = 
   | 'feeds' 
@@ -33,6 +33,7 @@ interface SidebarProps {
   onManageFeeds: () => void;
   isMobileOpen?: boolean;
   onCloseMobile?: () => void;
+  onLogout?: () => void;
 }
 
 export default function Sidebar({ 
@@ -41,11 +42,12 @@ export default function Sidebar({
   onAddFeed, 
   onManageFeeds, 
   isMobileOpen, 
-  onCloseMobile 
+  onCloseMobile,
+  onLogout
 }: SidebarProps) {
-  const bookmarkedArticles = useStore((state) => state.bookmarks);
-  const favoriteArticles = useStore((state) => state.favorites);
-  const customFeedsCount = useStore((state) => state.customFeeds.length);
+  const bookmarkedArticles: any[] = [];
+  const favoriteArticles: any[] = [];
+  const customFeedsCount = 0;
   
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -202,8 +204,18 @@ export default function Sidebar({
 
         </nav>
 
-        {/* Footer: Collapse Toggle */}
-        <div className="p-3 border-t border-slate-800 flex justify-center shrink-0">
+        {/* Footer: Logout + Collapse */}
+        <div className="p-3 border-t border-slate-800 flex flex-col gap-2 shrink-0">
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              title="Keluar"
+              className={`w-full flex items-center ${isCollapsed ? 'justify-center' : 'gap-2 px-3'} p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors`}
+            >
+              <LogOut className="w-4 h-4 shrink-0" />
+              {!isCollapsed && <span className="text-sm font-medium">Keluar</span>}
+            </button>
+          )}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
             title={isCollapsed ? "Perluas Sidebar" : "Perkecil Sidebar"}

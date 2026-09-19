@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { X, CheckCircle, AlertCircle } from 'lucide-react';
-import { useStore } from '@/store/useStore';
 import { FeedSource } from '@/config/feeds';
 import toast from 'react-hot-toast';
 
 interface AddFeedModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onAddFeed: (feed: FeedSource) => Promise<void>;
 }
 
-export default function AddFeedModal({ isOpen, onClose }: AddFeedModalProps) {
-  const addCustomFeed = useStore((state) => state.addCustomFeed);
+export default function AddFeedModal({ isOpen, onClose, onAddFeed }: AddFeedModalProps) {
 
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
@@ -45,7 +44,7 @@ export default function AddFeedModal({ isOpen, onClose }: AddFeedModalProps) {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !url) return;
 
@@ -60,7 +59,7 @@ export default function AddFeedModal({ isOpen, onClose }: AddFeedModalProps) {
       isCustom: true,
     };
 
-    addCustomFeed(newFeed);
+    await onAddFeed(newFeed);
     toast.success('Sumber Feed Berhasil Ditambahkan!');
     onClose();
     

@@ -7,8 +7,9 @@ import FeedCard from '@/components/FeedCard';
 import CompactFeedCard from '@/components/CompactFeedCard';
 import AddFeedModal from '@/components/AddFeedModal';
 import ManageFeedsModal from '@/components/ManageFeedsModal';
-import { DEFAULT_FEEDS } from '@/config/feeds';
-import { useStore } from '@/store/useStore';
+import LoginPage from '@/components/LoginPage';
+import { useAuth } from '@/context/AuthContext';
+import { useFirestoreData } from '@/hooks/useFirestoreData';
 import { Loader2, AlertCircle, LayoutGrid, List, FileText, ExternalLink, X, ChevronRight, BarChart3, Bookmark, Rss, Star } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
@@ -25,20 +26,46 @@ interface Article {
   pubDate: string;
   sourceName: string;
   contentSnippet?: string;
-  thumbnail?: string;
+  thumbnail?: string | null;
   content?: string;
   sourceId: string;
 }
 
 export default function Home() {
-  const customFeeds = useStore((state) => state.customFeeds);
-  const bookmarkedArticles = useStore((state) => state.bookmarks);
-  const favoriteArticles = useStore((state) => state.favorites);
-  const addBookmark = useStore((state) => state.addBookmark);
-  const removeBookmark = useStore((state) => state.removeBookmark);
-  const addFavorite = useStore((state) => state.addFavorite);
-  const removeFavorite = useStore((state) => state.removeFavorite);
-  const allFeeds = useMemo(() => [...DEFAULT_FEEDS, ...customFeeds], [customFeeds]);
+  const { user, loading: authLoading, logout } = useAuth();
+
+  // Show login page if not authenticated
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <LoginPage />;
+  }
+
+  return <HomeApp userId={user.uid} onLogout={logout} />;
+}
+
+function HomeApp({ userId, onLogout }: { userId: string; onLogout: () => void }) {
+  const {
+    feeds: allFeeds,
+    bookmarks: bookmarkedArticles,
+    favorites: favoriteArticles,
+    addFeed,
+    removeFeed,
+    updateFeed,
+    addBookmark,
+    removeBookmark,
+    addFavorite,
+    removeFavorite,
+    isBookmarked,
+    isFavorite,
+    isLoaded: dataLoaded,
+  } = useFirestoreData(userId);
 
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,39 +86,39 @@ export default function Home() {
   // Selected Article for Reading Pane
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
 
-  const isSelectedBookmarked = selectedArticle ? bookmarkedArticles.some(b => b.link === selectedArticle.link) : false;
-  const isSelectedFavorite = selectedArticle ? favoriteArticles.some(f => f.link === selectedArticle.link) : false;
+  const isSelectedBookmarked = selectedArticle ? isBookmarked(selectedArticle.link) : false;
+  const isSelectedFavorite = selectedArticle ? isFavorite(selectedArticle.link) : false;
 
-  const handleToggleBookmark = () => {
+  const handleToggleBookmark = async () => {
     if (!selectedArticle) return;
     if (isSelectedBookmarked) {
-      removeBookmark(selectedArticle.link);
+      await removeBookmark(selectedArticle.link);
     } else {
-      addBookmark({
+      await addBookmark({
         id: selectedArticle.link,
         title: selectedArticle.title,
         link: selectedArticle.link,
         pubDate: selectedArticle.pubDate,
         sourceName: selectedArticle.sourceName,
         contentSnippet: selectedArticle.contentSnippet,
-        thumbnail: selectedArticle.thumbnail,
+        thumbnail: selectedArticle.thumbnail ?? null,
       });
     }
   };
 
-  const handleToggleFavorite = () => {
+  const handleToggleFavorite = async () => {
     if (!selectedArticle) return;
     if (isSelectedFavorite) {
-      removeFavorite(selectedArticle.link);
+      await removeFavorite(selectedArticle.link);
     } else {
-      addFavorite({
+      await addFavorite({
         id: selectedArticle.link,
         title: selectedArticle.title,
         link: selectedArticle.link,
         pubDate: selectedArticle.pubDate,
         sourceName: selectedArticle.sourceName,
         contentSnippet: selectedArticle.contentSnippet,
-        thumbnail: selectedArticle.thumbnail,
+        thumbnail: selectedArticle.thumbnail ?? null,
         savedAt: Date.now(),
       });
     }
@@ -176,6 +203,7 @@ export default function Home() {
         onManageFeeds={() => setIsManageFeedsModalOpen(true)}
         isMobileOpen={isMobileMenuOpen}
         onCloseMobile={() => setIsMobileMenuOpen(false)}
+        onLogout={onLogout}
       />
 
       {/* Main Content Area */}
@@ -421,8 +449,18 @@ export default function Home() {
         </div>
       </div>
 
-      <AddFeedModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
-      <ManageFeedsModal isOpen={isManageFeedsModalOpen} onClose={() => setIsManageFeedsModalOpen(false)} />
+      <AddFeedModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onAddFeed={addFeed}
+      />
+      <ManageFeedsModal
+        isOpen={isManageFeedsModalOpen}
+        onClose={() => setIsManageFeedsModalOpen(false)}
+        feeds={allFeeds}
+        onRemoveFeed={removeFeed}
+        onUpdateFeed={updateFeed}
+      />
     </div>
   );
 }
