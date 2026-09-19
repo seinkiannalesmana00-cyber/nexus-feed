@@ -9,7 +9,6 @@ import toast from 'react-hot-toast';
 
 export default function LoginPage() {
   const { login } = useAuth();
-  const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -24,12 +23,7 @@ export default function LoginPage() {
     setError('');
     setIsLoading(true);
     try {
-      if (isRegisterMode) {
-        await createUserWithEmailAndPassword(auth, email, password);
-        toast.success('Akun berhasil dibuat! Anda sudah masuk.');
-      } else {
-        await login(email, password);
-      }
+      await login(email, password);
     } catch (err: any) {
       const code = err?.code || '';
       if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
@@ -128,25 +122,15 @@ export default function LoginPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  {isRegisterMode ? 'Mendaftar...' : 'Masuk...'}
+                  Masuk...
                 </>
               ) : (
-                isRegisterMode ? 'Buat Akun' : 'Masuk'
+                'Masuk'
               )}
             </button>
           </form>
 
-          <p className="text-center text-slate-400 text-sm mt-6">
-            {isRegisterMode ? 'Sudah punya akun? ' : 'Belum punya akun pertama? '}
-            <button 
-              onClick={() => setIsRegisterMode(!isRegisterMode)}
-              className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
-            >
-              {isRegisterMode ? 'Masuk di sini' : 'Daftar di sini'}
-            </button>
-          </p>
-
-          <p className="text-center text-slate-500 text-xs mt-4">
+          <p className="text-center text-slate-500 text-xs mt-6">
             Akses pribadi · Hanya untuk pemilik ZeinityFeed
           </p>
         </div>
