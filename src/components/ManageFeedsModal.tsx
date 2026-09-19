@@ -94,8 +94,10 @@ export default function ManageFeedsModal({
                     /* Edit Mode */
                     <div className="p-4 space-y-3">
                       <div>
-                        <label className="text-xs font-medium text-slate-500 mb-1 block">Nama Feed</label>
+                        <label htmlFor={`edit-name-${feed.id}`} className="text-xs font-medium text-slate-500 mb-1 block">Nama Feed</label>
                         <input
+                          id={`edit-name-${feed.id}`}
+                          name={`edit-name-${feed.id}`}
                           type="text"
                           value={editName}
                           onChange={(e) => setEditName(e.target.value)}
@@ -104,8 +106,10 @@ export default function ManageFeedsModal({
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-slate-500 mb-1 block">URL RSS Feed</label>
+                        <label htmlFor={`edit-url-${feed.id}`} className="text-xs font-medium text-slate-500 mb-1 block">URL RSS Feed</label>
                         <input
+                          id={`edit-url-${feed.id}`}
+                          name={`edit-url-${feed.id}`}
                           type="url"
                           value={editUrl}
                           onChange={(e) => setEditUrl(e.target.value)}

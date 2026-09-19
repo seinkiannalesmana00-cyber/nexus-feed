@@ -84,8 +84,10 @@ export default function AddFeedModal({ isOpen, onClose, onAddFeed }: AddFeedModa
 
         <form onSubmit={handleSubmit} className="p-4 overflow-y-auto flex flex-col gap-5">
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-slate-700">Nama Sumber</label>
+            <label htmlFor="feed-name" className="text-sm font-medium text-slate-700">Nama Sumber</label>
             <input
+              id="feed-name"
+              name="feed-name"
               type="text"
               required
               placeholder="e.g. IGN Southeast Asia"
@@ -96,9 +98,11 @@ export default function AddFeedModal({ isOpen, onClose, onAddFeed }: AddFeedModa
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-slate-700">URL RSS Feed</label>
+            <label htmlFor="feed-url" className="text-sm font-medium text-slate-700">URL RSS Feed</label>
             <div className="flex gap-2">
               <input
+                id="feed-url"
+                name="feed-url"
                 type="url"
                 required
                 placeholder="https://example.com/rss"
@@ -124,8 +128,10 @@ export default function AddFeedModal({ isOpen, onClose, onAddFeed }: AddFeedModa
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-slate-700">Kategori Platform</label>
+            <label htmlFor="feed-platform" className="text-sm font-medium text-slate-700">Kategori Platform</label>
             <select
+              id="feed-platform"
+              name="feed-platform"
               value={platform}
               onChange={(e) => setPlatform(e.target.value as any)}
               className="w-full px-3 py-2 border border-slate-200 rounded-lg bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
@@ -137,8 +143,10 @@ export default function AddFeedModal({ isOpen, onClose, onAddFeed }: AddFeedModa
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-slate-700">Cakupan Wilayah</label>
+            <label htmlFor="feed-scope" className="text-sm font-medium text-slate-700">Cakupan Wilayah</label>
             <select
+              id="feed-scope"
+              name="feed-scope"
               value={scope}
               onChange={(e) => setScope(e.target.value as any)}
               className="w-full px-3 py-2 border border-slate-200 rounded-lg bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
@@ -149,8 +157,10 @@ export default function AddFeedModal({ isOpen, onClose, onAddFeed }: AddFeedModa
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-slate-700">Fokus Pilar Topik</label>
+            <label htmlFor="feed-pillar" className="text-sm font-medium text-slate-700">Fokus Pilar Topik</label>
             <select
+              id="feed-pillar"
+              name="feed-pillar"
               value={pillar}
               onChange={(e) => setPillar(e.target.value as any)}
               className="w-full px-3 py-2 border border-slate-200 rounded-lg bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
