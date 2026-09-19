@@ -61,10 +61,11 @@ export default function LoginPage() {
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-8">
           {/* Logo */}
           <div className="flex flex-col items-center mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30 mb-4">
-              <Rss className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/zeinity.ico" alt="ZeinityFeed Logo" className="w-full h-full object-contain drop-shadow-xl" />
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">NexusFeed</h1>
+            <h1 className="text-2xl font-bold text-white tracking-tight">ZeinityFeed</h1>
             <p className="text-slate-400 text-sm mt-1">Masuk untuk melanjutkan</p>
           </div>
 
@@ -146,7 +147,7 @@ export default function LoginPage() {
           </p>
 
           <p className="text-center text-slate-500 text-xs mt-4">
-            Akses pribadi · Hanya untuk pemilik NexusFeed
+            Akses pribadi · Hanya untuk pemilik ZeinityFeed
           </p>
         </div>
       </div>

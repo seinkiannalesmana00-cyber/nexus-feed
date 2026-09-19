@@ -1,7 +1,6 @@
 "use client";
 
 import { Bookmark, Star, Calendar } from 'lucide-react';
-import { useStore } from '@/store/useStore';
 import { formatDistanceToNow } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
 
@@ -14,52 +13,33 @@ interface FeedCardProps {
     contentSnippet?: string;
     thumbnail?: string;
   };
+  };
   onReadQuick: () => void;
   isSelected?: boolean;
+  isBookmarked?: boolean;
+  isFavorite?: boolean;
+  onToggleBookmark?: (e: React.MouseEvent) => void;
+  onToggleFavorite?: (e: React.MouseEvent) => void;
 }
 
-export default function CompactFeedCard({ article, onReadQuick, isSelected }: FeedCardProps) {
-  const isBookmarked = useStore((state) => state.isBookmarked(article.link));
-  const addBookmark = useStore((state) => state.addBookmark);
-  const removeBookmark = useStore((state) => state.removeBookmark);
-
-  const isFavorite = useStore((state) => state.isFavorite(article.link));
-  const addFavorite = useStore((state) => state.addFavorite);
-  const removeFavorite = useStore((state) => state.removeFavorite);
+export default function CompactFeedCard({ 
+  article, 
+  onReadQuick, 
+  isSelected,
+  isBookmarked,
+  isFavorite,
+  onToggleBookmark,
+  onToggleFavorite
+}: FeedCardProps) {
 
   const handleBookmark = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isBookmarked) {
-      removeBookmark(article.link);
-    } else {
-      addBookmark({
-        id: article.link,
-        title: article.title,
-        link: article.link,
-        pubDate: article.pubDate,
-        sourceName: article.sourceName,
-        contentSnippet: article.contentSnippet,
-        thumbnail: article.thumbnail,
-      });
-    }
+    if (onToggleBookmark) onToggleBookmark(e);
   };
 
   const handleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isFavorite) {
-      removeFavorite(article.link);
-    } else {
-      addFavorite({
-        id: article.link,
-        title: article.title,
-        link: article.link,
-        pubDate: article.pubDate,
-        sourceName: article.sourceName,
-        contentSnippet: article.contentSnippet,
-        thumbnail: article.thumbnail,
-        savedAt: Date.now(),
-      });
-    }
+    if (onToggleFavorite) onToggleFavorite(e);
   };
 
   const formattedDate = formatDistanceToNow(new Date(article.pubDate), { 

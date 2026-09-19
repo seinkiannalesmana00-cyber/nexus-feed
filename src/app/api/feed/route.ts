@@ -8,6 +8,9 @@ const parser = new Parser({
   customFields: {
     item: [
       ['media:content', 'mediaContent'],
+      ['media:thumbnail', 'mediaThumbnail'],
+      ['media:group', 'mediaGroup'],
+      ['media:description', 'mediaDescription'],
       ['content:encoded', 'contentEncoded'],
       ['description', 'description'],
     ],
@@ -28,14 +31,22 @@ export async function GET(request: Request) {
     const items = feed.items.map((item) => {
       let thumbnail = null;
 
+      // Extract from media:thumbnail
+      if (item.mediaThumbnail && item.mediaThumbnail['$'] && item.mediaThumbnail['$'].url) {
+        thumbnail = item.mediaThumbnail['$'].url;
+      }
       // Extract from media:content
-      if (item.mediaContent && item.mediaContent['$'] && item.mediaContent['$'].url) {
+      else if (item.mediaContent && item.mediaContent['$'] && item.mediaContent['$'].url) {
         thumbnail = item.mediaContent['$'].url;
       }
+      // Extract from media:group (YouTube)
+      else if (item.mediaGroup && item.mediaGroup['media:thumbnail'] && item.mediaGroup['media:thumbnail'][0] && item.mediaGroup['media:thumbnail'][0]['$']) {
+        thumbnail = item.mediaGroup['media:thumbnail'][0]['$'].url;
+      }
       
-      const htmlContent = item.contentEncoded || item.content || item.description || '';
-
-      // Extract first image from HTML content using regex
+      let htmlContent = item.contentEncoded || item.content || item.mediaDescription || item.description || '';
+      
+      // Extract first image from HTML content using regex if still no thumbnail
       if (!thumbnail && htmlContent) {
         const imgRegex = /<img[^>]+src="?([^"\s>]+)"?[^>]*>/i;
         const match = imgRegex.exec(htmlContent);
@@ -44,11 +55,18 @@ export async function GET(request: Request) {
         }
       }
 
+      // If YouTube or Reddit and no content snippet, generate from htmlContent
+      let snippet = item.contentSnippet || '';
+      if (!snippet && htmlContent) {
+        // Strip HTML tags
+        snippet = htmlContent.replace(/<[^>]+>/g, ' ').substring(0, 200).trim();
+      }
+
       return {
         title: item.title || 'Untitled',
         link: item.link || '',
         pubDate: item.pubDate || new Date().toISOString(),
-        contentSnippet: item.contentSnippet || '',
+        contentSnippet: snippet,
         content: htmlContent,
         thumbnail: thumbnail,
       };

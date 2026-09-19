@@ -7,7 +7,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "NexusFeed - Curation Dashboard",
+  title: "ZeinityFeed - RSS Feed Dashboard",
   description: "RSS Reader & Curation Dashboard untuk agregasi konten Gaming dan Budaya Internet.",
 };
 

@@ -122,12 +122,13 @@ export default function Sidebar({
         {/* Logo Area */}
         <div className={`h-16 flex items-center ${isCollapsed ? 'justify-center px-0' : 'justify-between px-6'} border-b border-slate-800 shrink-0`}>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-indigo-500 flex items-center justify-center shrink-0 shadow-sm">
-              <span className="text-white font-bold text-lg leading-none">N</span>
+            <div className="w-8 h-8 rounded flex items-center justify-center shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/zeinity.ico" alt="ZeinityFeed Logo" className="w-full h-full object-contain" />
             </div>
             {!isCollapsed && (
               <span className="font-bold text-xl tracking-tight text-white">
-                NexusFeed
+                ZeinityFeed
               </span>
             )}
           </div>
