@@ -1,0 +1,219 @@
+"use client";
+
+import { useState } from 'react';
+import { 
+  Inbox, 
+  Target, 
+  Star, 
+  Bookmark, 
+  Cpu, 
+  Gamepad2, 
+  Globe, 
+  PanelLeftClose, 
+  PanelLeftOpen, 
+  Settings, 
+  Plus, 
+  X 
+} from 'lucide-react';
+import { useStore } from '@/store/useStore';
+
+export type MainTab = 
+  | 'feeds' 
+  | 'focus' 
+  | 'favorites' 
+  | 'idea_bank' 
+  | 'folder_intersection' 
+  | 'folder_gaming' 
+  | 'folder_internet_culture';
+
+interface SidebarProps {
+  activeTab: MainTab;
+  setActiveTab: (tab: MainTab) => void;
+  onAddFeed: () => void;
+  onManageFeeds: () => void;
+  isMobileOpen?: boolean;
+  onCloseMobile?: () => void;
+}
+
+export default function Sidebar({ 
+  activeTab, 
+  setActiveTab, 
+  onAddFeed, 
+  onManageFeeds, 
+  isMobileOpen, 
+  onCloseMobile 
+}: SidebarProps) {
+  const bookmarkedArticles = useStore((state) => state.bookmarks);
+  const favoriteArticles = useStore((state) => state.favorites);
+  const customFeedsCount = useStore((state) => state.customFeeds.length);
+  
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  // Helper to render navigation items
+  const NavItem = ({ 
+    id, 
+    icon: Icon, 
+    label, 
+    count 
+  }: { 
+    id: MainTab | 'manage', 
+    icon: any, 
+    label: string, 
+    count?: number 
+  }) => {
+    const isActive = activeTab === id;
+    const isManage = id === 'manage';
+
+    const handleClick = () => {
+      if (isManage) {
+        onManageFeeds();
+      } else {
+        setActiveTab(id as MainTab);
+      }
+      if (onCloseMobile) onCloseMobile();
+    };
+
+    return (
+      <button
+        onClick={handleClick}
+        title={isCollapsed ? label : undefined}
+        className={`w-full flex items-center ${isCollapsed ? 'justify-center px-2' : 'justify-between px-3'} py-2 rounded-md transition-colors group ${
+          isActive 
+            ? 'bg-indigo-500/10 text-indigo-400 font-medium' 
+            : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
+        }`}
+      >
+        <div className="flex items-center gap-3">
+          <Icon className={`w-5 h-5 ${isActive ? 'text-indigo-400' : 'group-hover:text-slate-200'}`} />
+          {!isCollapsed && <span className="text-sm">{label}</span>}
+        </div>
+        {!isCollapsed && count !== undefined && count > 0 && (
+          <span className={`py-0.5 px-2 rounded-full text-[10px] font-bold ${
+            isActive ? 'bg-indigo-500/20 text-indigo-300' : 'bg-slate-800 text-slate-300'
+          }`}>
+            {count}
+          </span>
+        )}
+        {/* Mobile/Collapsed Badge fallback */}
+        {isCollapsed && count !== undefined && count > 0 && (
+          <div className="absolute top-1 right-1 w-2 h-2 bg-indigo-500 rounded-full"></div>
+        )}
+      </button>
+    );
+  };
+
+  return (
+    <>
+      {/* Mobile Backdrop */}
+      {isMobileOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[90] md:hidden animate-in fade-in"
+          onClick={onCloseMobile}
+        />
+      )}
+
+      {/* Sidebar Container */}
+      <aside className={`fixed inset-y-0 left-0 z-[100] bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800 transition-all duration-300 ease-in-out md:relative md:translate-x-0 md:z-auto ${
+        isMobileOpen ? 'translate-x-0' : '-translate-x-full'
+      } ${isCollapsed ? 'w-20' : 'w-64'}`}>
+        
+        {/* Logo Area */}
+        <div className={`h-16 flex items-center ${isCollapsed ? 'justify-center px-0' : 'justify-between px-6'} border-b border-slate-800 shrink-0`}>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded bg-indigo-500 flex items-center justify-center shrink-0 shadow-sm">
+              <span className="text-white font-bold text-lg leading-none">N</span>
+            </div>
+            {!isCollapsed && (
+              <span className="font-bold text-xl tracking-tight text-white">
+                NexusFeed
+              </span>
+            )}
+          </div>
+          
+          {/* Close button for mobile */}
+          {!isCollapsed && (
+            <button 
+              onClick={onCloseMobile}
+              className="md:hidden p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
+        </div>
+
+        {/* Action Button */}
+        <div className={`p-4 shrink-0 border-b border-slate-800/50 ${isCollapsed ? 'flex justify-center' : ''}`}>
+          <button
+            onClick={() => {
+              onAddFeed();
+              if (onCloseMobile) onCloseMobile();
+            }}
+            title={isCollapsed ? "Tambah Feed Baru" : undefined}
+            className={`flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium transition-colors shadow-sm ${
+              isCollapsed ? 'w-10 h-10 p-0' : 'w-full px-4 py-2.5'
+            }`}
+          >
+            <Plus className="w-5 h-5 shrink-0" />
+            {!isCollapsed && <span>Tambah Feed</span>}
+          </button>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 px-3 py-4 space-y-6 overflow-y-auto custom-scrollbar">
+          
+          {/* Main Nav Group */}
+          <div>
+            {!isCollapsed && (
+              <p className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Navigasi Feed</p>
+            )}
+            <div className="space-y-1 relative">
+              <NavItem id="feeds" icon={Inbox} label="Semua Artikel" />
+              <NavItem id="focus" icon={Target} label="Fokus" />
+              <NavItem id="favorites" icon={Star} label="Favorit" count={favoriteArticles.length} />
+              <NavItem id="idea_bank" icon={Bookmark} label="Tersimpan" count={bookmarkedArticles.length} />
+            </div>
+          </div>
+
+          <div className="w-full h-px bg-slate-800/50"></div>
+
+          {/* Folders Group */}
+          <div>
+            {!isCollapsed && (
+              <p className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Kategori Topik</p>
+            )}
+            <div className="space-y-1">
+              <NavItem id="folder_intersection" icon={Cpu} label="Tech & AI" />
+              <NavItem id="folder_gaming" icon={Gamepad2} label="Gaming" />
+              <NavItem id="folder_internet_culture" icon={Globe} label="Internet Culture" />
+            </div>
+          </div>
+
+          <div className="w-full h-px bg-slate-800/50"></div>
+
+          {/* Management Group */}
+          <div>
+             {!isCollapsed && (
+              <p className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Manajemen</p>
+            )}
+            <div className="space-y-1">
+              <NavItem id="manage" icon={Settings} label="Pengaturan Feed" count={customFeedsCount} />
+            </div>
+          </div>
+
+        </nav>
+
+        {/* Footer: Collapse Toggle */}
+        <div className="p-3 border-t border-slate-800 flex justify-center shrink-0">
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            title={isCollapsed ? "Perluas Sidebar" : "Perkecil Sidebar"}
+            className="w-full flex items-center justify-center p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-lg transition-colors"
+          >
+            {isCollapsed ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
+          </button>
+        </div>
+
+      </aside>
+    </>
+  );
+}
