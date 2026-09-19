@@ -13,7 +13,6 @@ interface FeedCardProps {
     contentSnippet?: string;
     thumbnail?: string;
   };
-  };
   onReadQuick: () => void;
   isSelected?: boolean;
   isBookmarked?: boolean;
