@@ -269,7 +269,7 @@ function HomeApp({ userId, onLogout }: { userId: string; onLogout: () => void })
           </div>
 
           {/* Split View Container - Takes remaining height, true split view */}
-          <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 md:px-6 lg:px-8 pb-6 min-h-0 items-start">
+          <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 md:px-6 lg:px-8 pb-6 min-h-0 items-stretch">
             
             {/* Left Column: Article List & Filters */}
             <div className={`lg:col-span-5 h-full flex flex-col border border-slate-200 bg-white rounded-xl shadow-sm overflow-hidden ${selectedArticle ? 'hidden lg:flex' : 'flex'}`}>
