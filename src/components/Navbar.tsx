@@ -26,10 +26,13 @@ export default function Navbar({ onSearch, onMobileMenuToggle }: NavbarProps) {
             <Search className="h-4 w-4 text-slate-400" />
           </div>
           <input
+            id="global-search"
+            name="global-search"
             type="text"
             className="block w-full pl-10 pr-3 py-2 border border-slate-200 rounded-md leading-5 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all"
             placeholder="Cari artikel, topik, atau pembuat..."
             onChange={(e) => onSearch(e.target.value)}
+            aria-label="Cari artikel"
           />
         </div>
       </div>
