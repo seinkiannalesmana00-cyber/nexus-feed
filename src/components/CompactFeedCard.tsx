@@ -105,9 +105,15 @@ export default function CompactFeedCard({
           </div>
         </div>
 
-        <h3 className="font-bold text-slate-900 text-sm sm:text-base leading-tight mb-2 group-hover:text-indigo-600 transition-colors line-clamp-2">
+        <h3 className="font-bold text-slate-900 text-sm sm:text-base leading-tight mb-1 group-hover:text-indigo-600 transition-colors line-clamp-2">
           {article.title}
         </h3>
+        
+        {article.contentSnippet && (
+          <p className="text-xs text-slate-500 line-clamp-2 sm:line-clamp-2 mb-2">
+            {article.contentSnippet}
+          </p>
+        )}
         
         <div className="flex items-center justify-between mt-auto pt-2">
           <div className="flex items-center text-[10px] sm:text-xs font-medium text-slate-400">
