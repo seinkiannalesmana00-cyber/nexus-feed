@@ -97,12 +97,14 @@ export function useFirestoreData(userId: string) {
 
   // Bookmark actions
   const addBookmark = useCallback(async (article: Omit<BookmarkedArticle, 'savedAt'>) => {
-    const ref = doc(db, 'users', userId, 'bookmarks', article.id);
+    const safeId = encodeURIComponent(article.id);
+    const ref = doc(db, 'users', userId, 'bookmarks', safeId);
     await setDoc(ref, { ...article, savedAt: Date.now() });
   }, [userId]);
 
   const removeBookmark = useCallback(async (id: string) => {
-    const ref = doc(db, 'users', userId, 'bookmarks', id);
+    const safeId = encodeURIComponent(id);
+    const ref = doc(db, 'users', userId, 'bookmarks', safeId);
     await deleteDoc(ref);
   }, [userId]);
 
@@ -112,12 +114,14 @@ export function useFirestoreData(userId: string) {
 
   // Favorite actions
   const addFavorite = useCallback(async (item: BookmarkItem) => {
-    const ref = doc(db, 'users', userId, 'favorites', item.id);
+    const safeId = encodeURIComponent(item.id);
+    const ref = doc(db, 'users', userId, 'favorites', safeId);
     await setDoc(ref, item);
   }, [userId]);
 
   const removeFavorite = useCallback(async (id: string) => {
-    const ref = doc(db, 'users', userId, 'favorites', id);
+    const safeId = encodeURIComponent(id);
+    const ref = doc(db, 'users', userId, 'favorites', safeId);
     await deleteDoc(ref);
   }, [userId]);
 
