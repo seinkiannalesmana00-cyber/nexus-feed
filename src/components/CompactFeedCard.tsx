@@ -47,13 +47,13 @@ export default function CompactFeedCard({
 
   return (
     <div 
-      className={`group flex items-start bg-white border rounded-xl overflow-hidden cursor-pointer transition-colors ${
+      className={`group flex items-stretch bg-white border rounded-xl overflow-hidden cursor-pointer transition-colors ${
         isSelected ? 'border-indigo-500 ring-1 ring-indigo-500 bg-indigo-50/30' : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
       }`}
       onClick={onReadQuick}
     >
       {/* Thumbnail Container */}
-      <div className="w-24 sm:w-32 h-24 sm:h-32 shrink-0 bg-slate-100 border-r border-slate-100 hidden sm:block relative">
+      <div className="w-28 sm:w-40 shrink-0 bg-slate-100 border-r border-slate-100 hidden sm:block relative">
         {article.thumbnail ? (
           /* eslint-disable-next-line @next/next/no-img-element */
           <img 
