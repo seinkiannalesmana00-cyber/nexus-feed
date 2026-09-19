@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body
-        className={`${inter.className} bg-slate-50 text-slate-900 min-h-screen antialiased selection:bg-indigo-100 selection:text-indigo-900 flex overflow-hidden`}
+        className={`${inter.className} bg-slate-50 text-slate-900 min-h-screen w-full antialiased selection:bg-indigo-100 selection:text-indigo-900 flex overflow-hidden`}
       >
         <AuthProvider>
           {children}
